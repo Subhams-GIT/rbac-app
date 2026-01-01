@@ -30,7 +30,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use('/api/v1',Router)
-app.use('/api/v1',middleware,signinRouter)
+app.use('/api/v1',signinRouter)
 app.listen(3000,()=>{
     console.log(`App listening at port 3000`)
 })

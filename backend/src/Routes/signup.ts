@@ -1,5 +1,5 @@
 import e, { type Request, type Response } from 'express'
-import { user, type User } from '@Types/types';
+import { signUp, user, type User } from '@Types/types';
 import { UserError } from '@Types/Error';
 import { admins, userModal, nonAdmins } from '@db/User.model';
 import bcrypt from 'bcrypt'
@@ -9,7 +9,7 @@ export const Router = e.Router();
 
 Router.post("/signup/admin", async (req, res) => {
     try {
-        const parsed = user.safeParse(req.body);
+        const parsed = signUp.safeParse(req.body);
         if (!parsed.success) {
             throw new UserError({
                 name: "SIGNUP_ERROR",
@@ -61,7 +61,7 @@ Router.post("/signup/admin", async (req, res) => {
 
 Router.post('/signup/user', async (req: Request, res: Response) => {
    try {
-        const parsed = user.safeParse(req.body);
+        const parsed = signUp.safeParse(req.body);
         if (!parsed.success) {
             throw new UserError({
                 name: "SIGNUP_ERROR",
@@ -70,8 +70,10 @@ Router.post('/signup/user', async (req: Request, res: Response) => {
             });
         }
 
-        const { username, password, email } = parsed.data;
-
+        const { username, password, email ,adminEmail} = parsed.data;
+        if(!adminEmail){
+            throw new UserError({name:'SIGNUP_ERROR',message:'please provide an Admin Email',cause:'admin Email not found'})
+        }
         if (await userModal.findOne({ email })) {
             throw new UserError({
                 name: "SIGNUP_ERROR",
@@ -87,7 +89,10 @@ Router.post('/signup/user', async (req: Request, res: Response) => {
                 cause: "PASSWORD_RULES",
             });
         }
-
+        const admin=await userModal.findOne({email:adminEmail})
+        if(!admin){
+            return 
+        }
         const passwordHash = await bcrypt.hash(password, 10);
 
         const newUser = await userModal.create({
@@ -96,17 +101,11 @@ Router.post('/signup/user', async (req: Request, res: Response) => {
             password: passwordHash,
         });
 
-        await nonAdmins.create({ id: newUser._id });
+        await nonAdmins.create({ id: newUser._id ,active:false,adminId:[admin._id]});
 
-        const token = jwt.sign(
-            { userId: newUser._id.toString(), role: "user" },
-            process.env.SECRET!,
-            { expiresIn: "1m" }
-        );
-
-        res.cookie("auth_token", token, { httpOnly: true })
+        res
             .status(201)
-            .json({ message: "signup successful", token });
+            .json({ message: "signup successful"});
     } catch (error) {
         if (error instanceof UserError) {
             return res.status(400).json({ message: error.message });
