@@ -1,7 +1,7 @@
-import mongoose, { Model, Schema } from "mongoose";
-import { Role } from "@Types/types";
-
-const user=new mongoose.Schema({
+import mongoose, { Model, model, Schema } from "mongoose";
+import jwt from 'jsonwebtoken'
+import type { User, Usermethods} from "@Types/types";
+const user=new mongoose.Schema<User, mongoose.Model<User, {}, Usermethods>, Usermethods>({
     username:{
         type:String,
         required:true,
@@ -12,8 +12,8 @@ const user=new mongoose.Schema({
         required:true,
         unique:true,
     },
+    refreshtoken:{type:String},
     password:{type:String,required:true},
-    role:Role
 })
 
 const admin=new mongoose.Schema({
@@ -28,6 +28,27 @@ const nonAdmin=new mongoose.Schema({
         ref:'User'
     }
 })
-export const admins=new Model('Admins',admin);
-export const nonAdmins=new Model('NonAdmin',nonAdmin);
-export const userModal=new Model('User',user);
+
+user.method("generateAccessToken", function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+    },
+    process.env.SECRET!,
+    { expiresIn: "1h" }
+  );
+});
+
+
+user.method('generateRefreshToken',function (){
+    return jwt.sign({
+        _id:this._id
+    },process.env.REFRESH_SECRET!,{
+        expiresIn:'180d'
+    })
+})
+
+export const admins=model('Admins',admin);
+export const nonAdmins=model('NonAdmin',nonAdmin);
+export const userModal=model<User, mongoose.Model<User, {}, Usermethods>>('User',user);
