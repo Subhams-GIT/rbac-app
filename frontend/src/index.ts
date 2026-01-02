@@ -1,11 +1,29 @@
 import { serve } from "bun";
 import index from "./index.html";
+import { SignUp } from "./components/Signup";
+import { SignIn } from "./components/Signin";
+import { renderToString } from "react-dom/server";
+import RBACAuthSystem from "./components/login";
 
 const server = serve({
   routes: {
-    // Serve index.html for all unmatched routes.
-    "/*": index,
+    "/": index,
+    "/signup": {
+      GET() {
+        const html = renderToString(typeof RBACAuthSystem);
 
+        return new Response(`
+      <!doctype html>
+      <html>
+        <body>
+          <div id="root">${html}</div>
+        </body>
+      </html>
+    `, {
+          headers: { "Content-Type": "text/html" },
+        });
+      },
+    },
     "/api/hello": {
       async GET(req) {
         return Response.json({
