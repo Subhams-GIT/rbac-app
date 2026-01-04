@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toast } from "./Toast";
 import { DiagonalGrid } from "./Diagonal";
-import { ToastProps } from "./Toast";
-import { Data } from "./Toast";
+import { type ToastProps } from "./Toast";
+import { type Data } from "./Toast";
 import { SignIn } from "./Signin";
 import { SignUp } from "./Signup";
 
 
-export default function RBACAuthSystem():React.ReactNode {
+export default function Login():React.ReactNode {
   const [userType, setUserType] = useState<'user'|'admin'>("user");
   const [formType, setFormType] = useState("signin");
   const [toast, setToast] = useState<ToastProps | null>(null);

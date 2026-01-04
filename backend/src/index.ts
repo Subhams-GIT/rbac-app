@@ -6,8 +6,17 @@ import mongoose from 'mongoose';
 import {signinRouter} from '@Routes/signin'
 import { middleware } from 'middleware';
 import parser from 'cookie-parser'
-import { parse } from 'node:path';
+import rateLimit from 'express-rate-limit';
+import { updateRouter } from '@Routes/update';
+import { SessionRouter } from '@Routes/session';
+import { logOutRouter } from '@Routes/logOut';
 const app=express();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+});
+
+app.use(limiter);
 async function main(){
     try {
         await mongoose.connect(process.env.DATABASE_URL!,{maxPoolSize:10,maxConnecting:100})
@@ -31,6 +40,10 @@ app.use(cors({
 app.use(express.json())
 app.use('/api/v1',Router)
 app.use('/api/v1',signinRouter)
-app.listen(3000,()=>{
+
+app.use('/api/v1',middleware,updateRouter)
+app.use('/api/v1',middleware,SessionRouter)
+app.use('/api/v1',middleware,logOutRouter)
+app.listen(8000,()=>{
     console.log(`App listening at port 3000`)
 })

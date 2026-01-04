@@ -1,7 +1,7 @@
 import e, { type Request, type Response } from 'express'
 import { signUp, user, type User } from '@Types/types';
 import { UserError } from '@Types/Error';
-import { admins, userModal, nonAdmins } from '@db/User.model';
+import { userModal, nonAdmins } from '@db/User.model';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const passwordRegex =/^(?=(?:.*[A-Z]){2,})(?=(?:.*\d){2,})(?=(?:.*[a-z]){3,})(?=.*[!@#$&*]).{8,}$/;
@@ -42,9 +42,8 @@ Router.post("/signup/admin", async (req, res) => {
             username,
             email,
             password: passwordHash,
+            role:'admin'
         });
-
-        await admins.create({ id: newUser._id });
 
         res
             .status(201)

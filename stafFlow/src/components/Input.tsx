@@ -1,5 +1,5 @@
 import {motion} from 'framer-motion'
-import { error } from './Signup';
+import { type error } from './Signup';
 
 interface InputFieldProps{
     label:string,

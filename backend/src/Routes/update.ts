@@ -1,6 +1,19 @@
+// import { userModal } from '@db/User.model';
 import e, { type Request, type Response } from 'express'
-const updateRouter=e.Router();
+export const updateRouter=e.Router();
 
-updateRouter.patch('/update',(req:Request,res:Response)=>{
-    
+updateRouter.patch('/update', async (req:Request,res:Response)=>{
+    const updates=req.body;
+    const user=req.user;
+    for (const key in updates){
+        if(key!=undefined){
+            user[key]=key;
+        }
+    }
+    try {
+        await user.save();
+    } catch (error) {
+        console.error(error);
+        return ;
+    }
 })

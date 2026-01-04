@@ -1,21 +1,21 @@
-import {motion} from 'framer-motion';
-import { Data } from './Toast';
-import { useState } from 'react';
-import { InputField } from './Input';
-import { Loader } from './Loader';
-interface SignupProps{
-    userType:'admin'|'user',
-    onSwitchForm:()=>void;
-     showToast:(show:string,type:Data)=>void;
+import { motion } from "framer-motion";
+import { type Data } from "./Toast";
+import { useState } from "react";
+import { InputField } from "./Input";
+import { Loader } from "./Loader";
+interface SignupProps {
+  userType: "admin" | "user";
+  onSwitchForm: () => void;
+  showToast: (show: string, type: Data) => void;
 }
-export type error={
-    username:string,
-    email:string,
-    password:string,
-    repeatPassword:string,
-    adminEmail?:string
-}
-export const SignUp = ({ userType, onSwitchForm, showToast }:SignupProps) => {
+export type error = {
+  username: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+  adminEmail?: string;
+};
+export const SignUp = ({ userType, onSwitchForm, showToast }: SignupProps) => {
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -23,13 +23,25 @@ export const SignUp = ({ userType, onSwitchForm, showToast }:SignupProps) => {
     repeatPassword: "",
     adminEmail: "",
   });
-  const [errors, setErrors] = useState<error>({email:'',repeatPassword:'',username:'',password:'',adminEmail:''});
+  const [errors, setErrors] = useState<error>({
+    email: "",
+    repeatPassword: "",
+    username: "",
+    password: "",
+    adminEmail: "",
+  });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const validateForm = () => {
-    const newErrors:error={email:'',username:'',password:'',repeatPassword:'',adminEmail:''};
+    const newErrors: error = {
+      email: "",
+      username: "",
+      password: "",
+      repeatPassword: "",
+      adminEmail: "",
+    };
 
     if (!formData.email) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
@@ -54,9 +66,10 @@ export const SignUp = ({ userType, onSwitchForm, showToast }:SignupProps) => {
       else if (!/\S+@\S+\.\S+/.test(formData.adminEmail))
         newErrors.adminEmail = "Invalid admin email format";
     }
-
+    console.log(userType);
+    console.log(formData);
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+   return Object.values(newErrors).filter(element=>element.length!=0).length===0
   };
 
   const handleSubmit = async () => {
@@ -66,7 +79,7 @@ export const SignUp = ({ userType, onSwitchForm, showToast }:SignupProps) => {
     }
 
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // make api call
     setLoading(false);
     showToast(
       `${userType === "admin" ? "Admin" : "User"} account created successfully`,

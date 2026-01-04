@@ -2,7 +2,7 @@ import { useState } from "react";
 import {motion} from 'framer-motion'
 import { InputField } from "./Input";
 import { Loader } from "./Loader";
-import { Data } from "./Toast";
+import { type Data } from "./Toast";
 
 interface sigIn{
     userType:'admin'|'user',

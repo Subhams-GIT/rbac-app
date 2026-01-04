@@ -1,9 +1,8 @@
 import e, { type Request, type Response } from 'express'
-import { signIn, user } from '@Types/types';
+import { signIn} from '@Types/types';
 import { UserError } from '@Types/Error';
-import { admins, userModal } from '@db/User.model';
+import { userModal } from '@db/User.model';
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
 const passwordRegex = new RegExp('/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$\'')
 export const signinRouter = e.Router();
 
@@ -28,8 +27,8 @@ signinRouter.post('/signIn/admin', async (req: Request, res: Response) => {
             httpOnly:true,
             secure:true
         }
-        const accessToken=user.generateAccessToken('admin')
-        const refreshtoken=user.generateRefreshToken('admin');
+        const accessToken=user.generateAccessToken()
+        const refreshtoken=user.generateRefreshToken();
         user.refreshtoken=refreshtoken;
         await user.save();
         return res.cookie('access_token',accessToken,options).cookie('refresh_token',refreshtoken,options).status(200).json({
@@ -64,8 +63,8 @@ signinRouter.post('/signIn/user', async (req: Request, res: Response) => {
             httpOnly:true,
             secure:true
         }
-        const accessToken=user.generateAccessToken('user')
-        const refreshtoken=user.generateRefreshToken('user');
+        const accessToken=user.generateAccessToken()
+        const refreshtoken=user.generateRefreshToken();
         user.refreshtoken=refreshtoken;
         await user.save();
         return res.cookie('access_token',accessToken,options).cookie('refresh_token',refreshtoken,options).status(200).json({
