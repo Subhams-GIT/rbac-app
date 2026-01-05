@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Toast } from "./Toast";
-import { DiagonalGrid } from "./Diagonal";
-import { type ToastProps } from "./Toast";
-import { type Data } from "./Toast";
+import { Toast } from "../Toast";
+import { DiagonalGrid } from "../Diagonal";
+import { type ToastProps } from "../Toast";
+import { type Data } from "../Toast";
 import { SignIn } from "./Signin";
 import { SignUp } from "./Signup";
 

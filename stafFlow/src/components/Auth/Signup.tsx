@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { type Data } from "./Toast";
+import { type Data } from "../Toast";
 import { useState } from "react";
-import { InputField } from "./Input";
-import { Loader } from "./Loader";
+import { InputField } from "../Input";
+import { Loader } from "../Loader";
 interface SignupProps {
   userType: "admin" | "user";
   onSwitchForm: () => void;
@@ -67,7 +67,7 @@ export const SignUp = ({ userType, onSwitchForm, showToast }: SignupProps) => {
         newErrors.adminEmail = "Invalid admin email format";
     }
     console.log(userType);
-    console.log(formData);
+    // console.log(formData);
     setErrors(newErrors);
    return Object.values(newErrors).filter(element=>element.length!=0).length===0
   };

@@ -53,7 +53,9 @@ export async function middleware(
       ) as JwtPayload;
     }
 
-    const user = await userModal.findById(decoded._id);
+    const user = await userModal.findById(decoded._id).select({
+      
+    });
     if (!user) {
       throw new UserError({
         name: "SESSION_ERROR",
