@@ -16,6 +16,10 @@ const user = new Schema<User, mongoose.Model<User, {}, Usermethods>, Usermethods
     type: String,
     required: true,
   },
+  active:{
+    type:Boolean,
+    required:true
+  },
   role: {
     type: String,
     enum: ["admin", "user"],
@@ -27,19 +31,15 @@ const user = new Schema<User, mongoose.Model<User, {}, Usermethods>, Usermethods
 });
 
 
-const nonAdmin = new mongoose.Schema({
-    id: {
+const NonAdmin = new mongoose.Schema({
+    _id: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    adminId:[{
+    AdminIds:[{
         type:Schema.Types.ObjectId,
         ref:'User'
     }],
-    active:{
-        type:Boolean,
-        ref:'User'
-    }
 })
 
 user.method("generateAccessToken", function () {
@@ -64,5 +64,5 @@ user.method('generateRefreshToken', function () {
     })
 })
 
-export const nonAdmins = model('NonAdmin', nonAdmin);
+export const Users = model('NonAdmin', NonAdmin);
 export const userModal = model<User, mongoose.Model<User, {}, Usermethods>>('User', user);

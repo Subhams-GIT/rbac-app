@@ -9,22 +9,13 @@ SessionRouter.get('/session',async (req:Request,res:Response)=>{
       if (!req.user) {
         return res.status(401).json({ message: "Unauthenticated" });
       }
-      
+      console.log({user:req.user})
       // const user=await userModal.findOne({_id:req.user._id});
       const userId = new mongoose.Types.ObjectId(req.user._id);
       if(req.user.role=='admin'){
-      const adminData=await userModal.aggregate([
-        {
-          $match:{_id:userId}
-        },{
-          $lookup:{
-            from:'nonadmins',
-            localField:"_id",
-            foreignField:"id",
-            as:"users"
-          }
-        }
-      ])
+      const adminData=await userModal.findOne({
+        
+      })
       res.status(200).json({ user:req.user,users:adminData });
     }
     res.status(200).json({ user:req.user });

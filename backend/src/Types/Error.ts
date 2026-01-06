@@ -1,4 +1,4 @@
-type ErrorName='SIGNUP_ERROR' | 'FETCH_ERROR' | 'SIGNIN_ERROR' | 'SESSION_ERROR'
+type ErrorName='SIGNUP_ERROR' | 'FETCH_ERROR' | 'SIGNIN_ERROR' | 'SESSION_ERROR' | 'ACCESS_DENIED'
 interface ErrorProps{
     name:ErrorName,
     message:string,

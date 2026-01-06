@@ -54,7 +54,10 @@ export async function middleware(
     }
 
     const user = await userModal.findById(decoded._id).select({
-      
+      "email":1,
+      "username":1,
+      "role":1,
+      "_id":0
     });
     if (!user) {
       throw new UserError({

@@ -53,6 +53,7 @@ app.use('/api/v1',signinRouter)
 app.use('/api/v1',middleware,updateRouter)
 app.use('/api/v1',middleware,SessionRouter)
 app.use('/api/v1',middleware,logOutRouter)
+app.use('/api/v1',middleware,)
 app.listen(8000,()=>{
     console.log(`App listening at port 8000`)
 })

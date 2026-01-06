@@ -10,7 +10,8 @@ export const user = z.object({
     email: z.email(),
     password: z.string().min(8).max(16),
     role:z.enum(["admin","user"]),
-    refreshToken:z.string().optional()
+    refreshToken:z.string().optional(),
+    active:z.boolean().optional().default(true)
 })
 export const signUp=z.object({
     username:z.string(),

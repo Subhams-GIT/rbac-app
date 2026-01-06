@@ -1,7 +1,7 @@
 import e, { type Request, type Response } from 'express'
 import { signUp, user, type User } from '@Types/types';
 import { UserError } from '@Types/Error';
-import { userModal, nonAdmins } from '@db/User.model';
+import { userModal, Users } from '@db/User.model';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const passwordRegex =/^(?=(?:.*[A-Z]){2,})(?=(?:.*\d){2,})(?=(?:.*[a-z]){3,})(?=.*[!@#$&*]).{8,}$/;
@@ -10,6 +10,7 @@ export const Router = e.Router();
 Router.post("/signup/admin", async (req, res) => {
     try {
         const parsed = signUp.safeParse(req.body);
+        console.log(parsed)
         if (!parsed.success) {
             throw new UserError({
                 name: "SIGNUP_ERROR",
@@ -38,11 +39,12 @@ Router.post("/signup/admin", async (req, res) => {
 
         const passwordHash = await bcrypt.hash(password, 10);
 
-        const newUser = await userModal.create({
+        const admin=await userModal.create({
             username,
             email,
             password: passwordHash,
-            role:'admin'
+            role:'admin',
+            active:true
         });
 
         res
@@ -51,7 +53,7 @@ Router.post("/signup/admin", async (req, res) => {
     } catch (error) {
         console.error(error)
         if (error instanceof UserError) {
-            return res.status(400).json({ message: error.message });
+            res.status(400).json({ message: error.message });
         }
         res.status(500).json({ message: "Internal server error" });
     }
@@ -98,9 +100,15 @@ Router.post('/signup/user', async (req: Request, res: Response) => {
             username,
             email,
             password: passwordHash,
-        });
+            active:true,
+            role:'user',
+       });
 
-        await nonAdmins.create({ id: newUser._id ,active:false,adminId:[admin._id]});
+        await Users.findByIdAndUpdate({
+            _id:newUser._id
+        },{
+            $push:{AdminIds:admin._id}
+        })
 
         res
             .status(201)
