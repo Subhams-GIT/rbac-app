@@ -12,7 +12,7 @@ export default function Login():React.ReactNode {
   const [userType, setUserType] = useState<'user'|'admin'>("user");
   const [formType, setFormType] = useState("signin");
   const [toast, setToast] = useState<ToastProps | null>(null);
-
+  
   const showToast = (message: string, type: Data = "success") => {
     setToast({ message, type, id: Date.now() });
     setTimeout(() => setToast(null), 4000);

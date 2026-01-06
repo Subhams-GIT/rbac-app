@@ -4,8 +4,6 @@ import { InputField } from "../Input";
 import { Loader } from "../Loader";
 import { type Data } from "../Toast";
 import { AuthService } from "./Auth.service";
-import { useContext } from "react";
-import { userContext } from "../../Context/userContext";
 import { useNavigate} from "react-router-dom";
 interface sigIn {
   userType: "admin" | "user";
@@ -24,7 +22,6 @@ export const SignIn = ({ userType, onSwitchForm, showToast }: sigIn) => {
   const [errors, setErrors] = useState<errors>({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const Useuser = useContext(userContext);
   const router=useNavigate();
   const validateForm = () => {
     const newErrors: errors = {};
@@ -47,7 +44,6 @@ export const SignIn = ({ userType, onSwitchForm, showToast }: sigIn) => {
       });
       console.log(user)
       debugger;
-      Useuser?.setuser(user);
       debugger;
     } catch (error) {
       showToast("sign up failed", "error");

@@ -1,11 +1,11 @@
 import { useContext } from "react"
-import { userContext } from "../../Context/userContext"
+
 import { LogOut } from "lucide-react";
+import { useAuth } from "../../Context/AuthContext";
 
 const Navbar = () => {
-    const user=useContext(userContext);
-    console.log({userd:user?.user})
-    console.log(user?.user?.role)
+    const session=useAuth();
+    const user=session?.session;
   return (
     <div className="h-12 shadow-md bg-white text-black flex justify-between items-center px-2">
         <section className="px-1 ">{user?.user?.role}</section>
