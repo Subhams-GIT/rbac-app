@@ -5,6 +5,12 @@ interface signinProps{
     password:string,
     role:string
 }
+
+interface signupProps extends signinProps{
+    username:string,
+    adminEmail?:string
+}
+
 export class AuthService{
     static async login({email,password,role}:signinProps){
       console.log({email,password,role})
@@ -18,7 +24,17 @@ export class AuthService{
           return error;        
       }
     }
-    static signup(){
-      
+    static async signup({email,password,username,role,adminEmail}:signupProps){
+      try {
+        const new_user=await instance.post(`/signup/${role}`,{
+          email,
+          username,
+          password,
+          adminEmail
+        })
+        return new_user;
+      } catch (error) {
+        throw error;
+      }
     }
 }

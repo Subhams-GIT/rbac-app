@@ -3,6 +3,8 @@ import { type Data } from "../Toast";
 import { useState } from "react";
 import { InputField } from "../Input";
 import { Loader } from "../Loader";
+import { AuthService } from "./Auth.service";
+import { useNavigate } from "react-router-dom";
 interface SignupProps {
   userType: "admin" | "user";
   onSwitchForm: () => void;
@@ -15,6 +17,7 @@ export type error = {
   repeatPassword: string;
   adminEmail?: string;
 };
+const passwordRegex =/^(?=(?:.*[A-Z]){2,})(?=(?:.*\d){2,})(?=(?:.*[a-z]){3,})(?=.*[!@#$&*]).{8,}$/;
 export const SignUp = ({ userType, onSwitchForm, showToast }: SignupProps) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -33,7 +36,7 @@ export const SignUp = ({ userType, onSwitchForm, showToast }: SignupProps) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-
+  const router=useNavigate();
   const validateForm = () => {
     const newErrors: error = {
       email: "",
@@ -52,8 +55,8 @@ export const SignUp = ({ userType, onSwitchForm, showToast }: SignupProps) => {
       newErrors.username = "Username must be at least 3 characters";
 
     if (!formData.password) newErrors.password = "Password is required";
-    else if (formData.password.length < 6)
-      newErrors.password = "Password must be at least 6 characters";
+    else if (formData.password.length < 6 || !passwordRegex.test(formData.password))
+      newErrors.password = "Password must be at least 6 characters and include multiple characters !";
 
     if (!formData.repeatPassword)
       newErrors.repeatPassword = "Please repeat your password";
@@ -66,10 +69,8 @@ export const SignUp = ({ userType, onSwitchForm, showToast }: SignupProps) => {
       else if (!/\S+@\S+\.\S+/.test(formData.adminEmail))
         newErrors.adminEmail = "Invalid admin email format";
     }
-    console.log(userType);
-    // console.log(formData);
     setErrors(newErrors);
-   return Object.values(newErrors).filter(element=>element.length!=0).length===0
+    return Object.values(newErrors).filter(element=>element.length!=0).length===0
   };
 
   const handleSubmit = async () => {
@@ -77,21 +78,26 @@ export const SignUp = ({ userType, onSwitchForm, showToast }: SignupProps) => {
       showToast("Please fix the errors in the form", "error");
       return;
     }
-
-    setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // make api call
-    setLoading(false);
-    showToast(
-      `${userType === "admin" ? "Admin" : "User"} account created successfully`,
-      "success"
-    );
-    setFormData({
-      email: "",
-      username: "",
-      password: "",
-      repeatPassword: "",
-      adminEmail: "",
-    });
+    try {
+      const {email,username,password,adminEmail}=formData
+      setLoading(true);
+      await AuthService.signup({email,username,password,role:userType,adminEmail:userType==="user"?adminEmail:undefined})
+      // router('/login');
+      setLoading(false);
+      showToast(
+        `${userType === "admin" ? "Admin" : "User"} account created successfully`,
+        "success"
+      );
+      setFormData({
+        email: "",
+        username: "",
+        password: "",
+        repeatPassword: "",
+        adminEmail: "",
+      });
+    } catch (error) {
+      console.error(error) 
+    }
   };
 
   return (

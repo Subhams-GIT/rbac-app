@@ -11,6 +11,7 @@ interface User {
   email: string;
   role: "admin" | "user";
   status: boolean;
+  
 }
 
 interface userContextType {
