@@ -35,7 +35,7 @@ signinRouter.post('/signIn/admin', async (req: Request, res: Response) => {
             message:"signed in sucessfully"
         })
 
-    } catch (error: any | UserError) {
+    } catch (error) {
         console.log(error)
         res.status(500).json({
             message: error,
@@ -71,7 +71,7 @@ signinRouter.post('/signIn/user', async (req: Request, res: Response) => {
             message:"signed in sucessfully"
         })
         
-    } catch (error: any | UserError) {
+    } catch (error) {
         console.log(error)
         res.status(500).json({
             message: error,

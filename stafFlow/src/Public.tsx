@@ -6,7 +6,7 @@ const Public = ({children}:{children:React.ReactNode}) => {
     const auth=useAuth();
 
     if(auth?.loading){
-        return <Loader/>
+        return <div className='flex-1'><Loader className='animate-spin'/></div>
     }
     else if(auth?.session){
         return <Navigate to={'/dashboard'} replace/>

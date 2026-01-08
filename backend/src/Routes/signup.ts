@@ -3,7 +3,7 @@ import { signUp, user, type User } from '@Types/types';
 import { UserError } from '@Types/Error';
 import { userModal, Users } from '@db/User.model';
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+
 const passwordRegex =/^(?=(?:.*[A-Z]){2,})(?=(?:.*\d){2,})(?=(?:.*[a-z]){3,})(?=.*[!@#$&*]).{8,}$/;
 export const Router = e.Router();
 
@@ -104,10 +104,8 @@ Router.post('/signup/user', async (req: Request, res: Response) => {
             role:'user',
        });
 
-        await Users.findByIdAndUpdate({
-            _id:newUser._id
-        },{
-            $push:{AdminIds:admin._id}
+        await Users.create({
+            _id:newUser._id,
         })
 
         res

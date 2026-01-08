@@ -1,7 +1,7 @@
 import { userModal } from "@db/User.model";
 import { UserError } from "@Types/Error";
 import type { NextFunction, Request, Response } from "express";
-import jwt, { type JwtPayload } from "jsonwebtoken";
+import jwt, { type JsonWebTokenError,type JwtPayload } from "jsonwebtoken";
 
 export async function middleware(
   req: Request,
@@ -27,7 +27,7 @@ export async function middleware(
         accessToken,
         process.env.SECRET!
       ) as JwtPayload;
-    } catch (err: any) {
+    } catch (err:any|JsonWebTokenError) {
       if (err.name !== "TokenExpiredError" || !refreshToken) {
         throw err;
       }
@@ -57,7 +57,9 @@ export async function middleware(
       "email":1,
       "username":1,
       "role":1,
-      "_id":0
+      "_id":0,
+      "refreshToken":0,
+      "active":1
     });
     if (!user) {
       throw new UserError({

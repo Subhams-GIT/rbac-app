@@ -43,12 +43,12 @@ export const SignIn = ({ userType, onSwitchForm, showToast }: sigIn) => {
         role: userType,
       });
       console.log(user)
-      debugger;
-      debugger;
+      // debugger;
+      // debugger;
     } catch (error) {
       showToast("sign up failed", "error");
     } finally {
-      debugger;
+      // debugger;
       setLoading(false);
       showToast(
         `${userType === "admin" ? "Admin" : "User"} signed in successfully`,
