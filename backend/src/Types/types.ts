@@ -20,7 +20,11 @@ export const signUp=z.object({
     username:z.string(),
     email:z.email(),
     password:z.string(),
-    adminEmail:z.email().optional()
+    orgEmail:z.string()
+})
+
+export const OrgSchema=z.object({
+    email:z.email(),
 })
 
 export const signIn = z.object({

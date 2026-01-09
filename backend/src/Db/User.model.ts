@@ -5,7 +5,6 @@ const user = new Schema<User, mongoose.Model<User, {}, Usermethods>, Usermethods
   username: {
     type: String,
     required: true,
-    unique: true,
   },
   email: {
     type: String,
@@ -18,7 +17,8 @@ const user = new Schema<User, mongoose.Model<User, {}, Usermethods>, Usermethods
   },
   active:{
     type:Boolean,
-    required:true
+    required:true,
+    default:true,
   },
   role: {
     type: String,
@@ -47,6 +47,19 @@ const NonAdmin = new mongoose.Schema({
     
 })
 
+
+const org=new Schema({
+    orgEmail:{
+      type:String,
+      required:true
+    },
+    token:{
+      type:String,
+      required:true,
+      unique:true
+    }
+})
+
 user.method("generateAccessToken", function () {
   return jwt.sign(
     {
@@ -72,7 +85,7 @@ user.method('generateRefreshToken', function () {
 
 export const Users = model('NonAdmin', NonAdmin);
 export const userModal = model<User, mongoose.Model<User, {}, Usermethods>>('User', user);
-
+export const organisations=model('Org',org);
 
 /*
 
